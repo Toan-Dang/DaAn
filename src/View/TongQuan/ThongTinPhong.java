@@ -1,4 +1,4 @@
-package View.CaiDat.QLPhong;
+package View.TongQuan;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -6,9 +6,6 @@ import javax.swing.table.*;
 
 import Data.CoSoDuLieu;
 import Model.DangKiTruoc;
-import View.TongQuan.TongQuan_ThongTinPhong_DatPhong;
-import View.TongQuan.TongQuan_ThongTinPhong_DoiPhong;
-import View.TongQuan.TongQuan_ThongTinPhong_ThemDichVu;
 
 import java.awt.*;
 import java.sql.Connection;
@@ -162,7 +159,6 @@ public class ThongTinPhong extends JFrame {
         lblPhng.setHorizontalAlignment(SwingConstants.CENTER);
         lblPhng.setForeground(new Color(255, 255, 255));
         lblPhng.setFont(new Font("Times New Roman", Font.BOLD, 30));
-
 
         JLabel lblMaPhong = new JLabel(String.valueOf(id));
         lblMaPhong.setBounds(348, 0, 223, 51);

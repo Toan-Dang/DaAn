@@ -1,9 +1,6 @@
 package View.TongQuan;
 
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -20,10 +17,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import Data.CoSoDuLieu;
-import Model.DangKiTruoc;
-import Model.DichVu;
 import Model.Phong;
-import View.CaiDat.QLPhong.ThongTinPhong;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;

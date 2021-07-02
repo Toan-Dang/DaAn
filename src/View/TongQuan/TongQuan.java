@@ -5,7 +5,6 @@ import Data.CoSoDuLieu;
 import Model.Phong;
 import View.ThanhToan.BaoCao;
 import View.CaiDat.QLPhong.CaiDat;
-import View.CaiDat.QLPhong.ThongTinPhong;
 import View.ThanhToan.ThanhToanV;
 import View.KhachHang.KhachHangV;
 import View.NhanVien.NhanVienV;

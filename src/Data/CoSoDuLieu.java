@@ -1761,7 +1761,13 @@ public class CoSoDuLieu {
 				rs = st.executeQuery(q);
 
 				while (rs.next()) {
-					maPDV = rs.getInt(1) + 1 ;
+					maPDV = rs.getInt(1)  ;
+				}
+
+				if(maPDV == -1){
+					maPDV = 1;
+				}else{
+					maPDV++;
 				}
 				con.close();
 

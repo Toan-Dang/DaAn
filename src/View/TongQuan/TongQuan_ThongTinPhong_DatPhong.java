@@ -251,6 +251,7 @@ public class TongQuan_ThongTinPhong_DatPhong extends JFrame {
         btnTao.addActionListener(e -> {
             if(makh > 0)
 				try {
+				    this.dispose();
 					CoSoDuLieu.CreateWithAvailabeKH(id,pickNGNP, pickNGTP,makh,manv);
                 } catch (ClassNotFoundException e1) {
 					e1.printStackTrace();
