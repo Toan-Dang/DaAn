@@ -7,6 +7,8 @@ import javax.swing.border.EmptyBorder;
 
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -18,6 +20,7 @@ import javax.swing.table.*;
 
 import Data.CoSoDuLieu;
 import Model.HoaDon;
+import REPORT.Xchart;
 import View.CaiDat.QLPhong.CaiDat;
 import View.KhachHang.KhachHangV;
 import View.NhanVien.NhanVienV;
@@ -202,7 +205,16 @@ public class BaoCao extends JFrame  {
 		btnBiuKinh.setBackground(Color.LIGHT_GRAY);
 		btnBiuKinh.setBounds(378, 113, 179, 36);
 		contentPane.add(btnBiuKinh);
-
+		btnBiuKinh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new Xchart();
+				} catch (SQLException | ClassNotFoundException throwables) {
+					throwables.printStackTrace();
+				}
+			}
+		});
 		JLabel lblNewLabel_5 = new JLabel("Tìm kiếm:");
 		lblNewLabel_5.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		lblNewLabel_5.setBounds(198, 175, 62, 19);

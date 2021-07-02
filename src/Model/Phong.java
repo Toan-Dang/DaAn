@@ -22,6 +22,13 @@ public class Phong {
 
     }
 
+    public Phong(int maphong, String maloaiphong, int soluong, double gia){
+        this.MaPhong = maphong;
+        this.MaLoaiPhong = maloaiphong;
+        this.SoLuongNguoiHienTai = soluong;
+        this.Gia = gia;
+    }
+
     public Phong(int maphong, String maloaiphong, int soluong, String tinhtrang,double gia){
         this.MaPhong = maphong;
         this.MaLoaiPhong = maloaiphong;

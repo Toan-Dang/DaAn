@@ -9,6 +9,15 @@ public class DichVu2 {
     private int SL;
     private double thanhTien;
     private Date NgayYeuCau;
+
+    public DichVu2(String tenDichVu, double gia, String chiTiet,int sL,double thanhTien)  {
+        super();
+        this.tenDichVu = tenDichVu;
+        this.chiTiet = chiTiet;
+        this.gia = gia;
+        SL = sL;
+        this.thanhTien = thanhTien;
+    }
     public DichVu2(String tenDichVu, double gia, String chiTiet,int sL,Date ngayYeuCau,double thanhTien)  {
         super();
         this.tenDichVu = tenDichVu;

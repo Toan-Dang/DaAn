@@ -16,7 +16,7 @@ import java.util.*;
 
 public class Xchart {
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    public   Xchart() throws SQLException, ClassNotFoundException {
         List<Date> xData = new ArrayList<>();
         List<Long> yData = new ArrayList<>();
         for (Map.Entry<Date, Long> entry : CoSoDuLieu.getNgay_DoanhThu().entrySet()) {

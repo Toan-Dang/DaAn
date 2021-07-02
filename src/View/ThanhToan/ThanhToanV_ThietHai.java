@@ -41,8 +41,8 @@ public class ThanhToanV_ThietHai extends JFrame implements ActionListener {
             "Tên thiết bị",
             "Chi tiết",
             "Giá",
-            "Số lượng",
             "Mã phòng",
+            "Số lượng",
             "Thành tiền"};
     private Object data = new Object [][] {};
     private JTable table;
@@ -69,7 +69,8 @@ public class ThanhToanV_ThietHai extends JFrame implements ActionListener {
      */
     public ThanhToanV_ThietHai(int id) throws ClassNotFoundException, SQLException {
         this.id = id;
-        setBounds(100, 100, 794, 554);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBounds(100, 100, 794, 455);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -121,7 +122,7 @@ public class ThanhToanV_ThietHai extends JFrame implements ActionListener {
         contentPane.add(lblNewLabel_1_3);
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(10, 207, 760, 238);
+        scrollPane.setBounds(10, 171, 760, 166);
         contentPane.add(scrollPane);
 
         table = new JTable();
@@ -134,11 +135,13 @@ public class ThanhToanV_ThietHai extends JFrame implements ActionListener {
         contentPane.add(btnThem);
 
         JButton btnQuayLai = new JButton("Quay lại");
-        btnQuayLai.addActionListener(e-> this.dispose());
+        btnQuayLai.addActionListener(e-> {
+            this.dispose();
+        });
 
         btnQuayLai.setBackground(new Color(220, 20, 60));
         btnQuayLai.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-        btnQuayLai.setBounds(608, 455, 137, 49);
+        btnQuayLai.setBounds(616, 347, 137, 49);
         contentPane.add(btnQuayLai);
 
         JLabel lblNewLabel_1_2_1 = new JLabel("Mã phòng:");
@@ -150,12 +153,53 @@ public class ThanhToanV_ThietHai extends JFrame implements ActionListener {
         comboBoxphong.setBounds(504, 125, 88, 36);
         contentPane.add(comboBoxphong);
         CoSoDuLieu.getListPhong_PTP(comboBoxphong, id);
+
+        JButton btnSua = new JButton("Sửa");
+        btnSua.addActionListener(e->{
+            this.dispose();
+            try {
+                new ThanhToanV_ThietHai_Sua(id,CoSoDuLieu.getMaThietHai( (String)table.getValueAt(table.getSelectedRow(), 0)), (int)table.getValueAt(table.getSelectedRow(), 3),(int)table.getValueAt(table.getSelectedRow(), 4));
+            } catch (ClassNotFoundException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        });
+
+        btnSua.setBackground(new Color(0, 191, 255));
+        btnSua.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        btnSua.setBounds(348, 347, 88, 36);
+        contentPane.add(btnSua);
+
+        JButton btnXoa = new JButton("Xóa");
+        btnXoa.setBackground(Color.RED);
+        btnXoa.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        btnXoa.setBounds(484, 347, 88, 36);
+        contentPane.add(btnXoa);
+        btnXoa.addActionListener(e-> {
+            try {
+                CoSoDuLieu.XoaChitietThietHai(CoSoDuLieu.getMaPhieuThu(id),CoSoDuLieu.getMaThietHai( (String)table.getValueAt(table.getSelectedRow(), 0)), (int)table.getValueAt(table.getSelectedRow(), 3));
+            } catch (ClassNotFoundException | SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            this.dispose();
+            try {
+                new ThanhToanV_ThietHai(id);
+            } catch (ClassNotFoundException | SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        });
         showListThietHai(listtb(id));
 
         btnThem.addActionListener(e -> {
             //System.out.print(comboBox.getSelectedItem().toString());
             try {
-                CoSoDuLieu.InsertChiTietThietHai(CoSoDuLieu.getMaPhieuThu(id),CoSoDuLieu.getMaThietHai(comboBox.getSelectedItem().toString()),comboBoxphong.getSelectedItem().toString(), textSoLuong.getText());
+                try {
+                    CoSoDuLieu.InsertChiTietThietHai(CoSoDuLieu.getMaPhieuThu(id),CoSoDuLieu.getMaThietHai(comboBox.getSelectedItem().toString()),comboBoxphong.getSelectedItem().toString(), textSoLuong.getText());
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             } catch (ClassNotFoundException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
@@ -180,8 +224,8 @@ public class ThanhToanV_ThietHai extends JFrame implements ActionListener {
             LichHen[i][0] = list.get(i).getTenThietBi();
             LichHen[i][2] = list.get(i).getGia();
             LichHen[i][1] = list.get(i).getChiTiet();
-            LichHen[i][3] = list.get(i).getSL();
-            LichHen[i][4] = list.get(i).getMaPhong();
+            LichHen[i][4] = list.get(i).getSL();
+            LichHen[i][3] = list.get(i).getMaPhong();
             LichHen[i][5] = list.get(i).getThanhTien();
         }
         table.setModel(new DefaultTableModel(LichHen, columnNames));

@@ -60,7 +60,7 @@ public class DatNhieuPhong extends JFrame {
         contentPane.add(panel_1);
 
         JLabel lblPhng = new JLabel("Phòng:");
-        lblPhng.setBounds(198, 0, 223, 51);
+        lblPhng.setBounds(100, 0, 223, 51);
         panel_1.add(lblPhng);
         lblPhng.setHorizontalAlignment(SwingConstants.CENTER);
         lblPhng.setForeground(new Color(255, 255, 255));
@@ -68,7 +68,7 @@ public class DatNhieuPhong extends JFrame {
 
 
         JLabel lblMaPhong = new JLabel(String.valueOf(id.toString()));
-        lblMaPhong.setBounds(400, 0, 223, 51);
+        lblMaPhong.setBounds(200, 0, 700, 51);
         panel_1.add(lblMaPhong);
         lblMaPhong.setHorizontalAlignment(SwingConstants.CENTER);
         lblMaPhong.setForeground(new Color(255, 255, 255));

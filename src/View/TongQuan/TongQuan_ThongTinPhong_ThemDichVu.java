@@ -33,7 +33,6 @@ import Model.DichVu2;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.Objects;
 
 public class TongQuan_ThongTinPhong_ThemDichVu extends JFrame implements ActionListener {
 	int id;
@@ -72,6 +71,7 @@ public class TongQuan_ThongTinPhong_ThemDichVu extends JFrame implements ActionL
 	 */
 	public TongQuan_ThongTinPhong_ThemDichVu(int id) throws ClassNotFoundException, SQLException {
 		this.id = id;
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 794, 554);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -143,13 +143,52 @@ public class TongQuan_ThongTinPhong_ThemDichVu extends JFrame implements ActionL
 		btnQuayLai.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		btnQuayLai.setBounds(608, 455, 137, 49);
 		contentPane.add(btnQuayLai);
-		showListDichVuDaDat(listdv2(id));
+
+		JButton btnSua = new JButton("Sửa");
+		btnSua.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		btnSua.setBackground(new Color(0, 191, 255));
+		btnSua.setBounds(328, 455, 88, 36);
+		btnSua.addActionListener(e->{
+			this.dispose();
+			try {
+				new TongQuan_ThongTinPhong_ThemDichVu_SuaDichVu(id, CoSoDuLieu.getMaDichVu((String) table.getValueAt(table.getSelectedRow(), 0)),(int) table.getValueAt(table.getSelectedRow(), 3));
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
+		contentPane.add(btnSua);
+
+		JButton btnXoa = new JButton("Xóa");
+		btnXoa.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		btnXoa.setBackground(Color.RED);
+		btnXoa.setBounds(464, 455, 88, 36);
+		btnXoa.addActionListener(e->{
+			try {
+				CoSoDuLieu.XoaChitietDichVu(CoSoDuLieu.getMaPhieuDichVu(id), CoSoDuLieu.getMaDichVu((String)table.getValueAt(table.getSelectedRow(), 0)), id);
+			} catch (ClassNotFoundException | SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			this.dispose();
+			try {
+				new TongQuan_ThongTinPhong_ThemDichVu(id);
+			} catch (ClassNotFoundException | SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
+		contentPane.add(btnXoa);
+		showListDichVuDaDat(listdv(id));
 
 		btnThem.addActionListener(e -> {
-
+			//System.out.print(comboBox.getSelectedItem().toString());
 			try {
-				//CoSoDuLieu.InsertChiTietDV(this.maptp,CoSoDuLieu.getMaDichVu(Objects.requireNonNull(comboBox.getSelectedItem()).toString()),id, textSoLuong.getText());
-				CoSoDuLieu.InsertChiTietDV(CoSoDuLieu.getMaPhieuDichVu(id),CoSoDuLieu.getMaDichVu(Objects.requireNonNull(comboBox.getSelectedItem()).toString()),id, textSoLuong.getText());
+				try {
+					CoSoDuLieu.InsertChiTietDV(CoSoDuLieu.getMaPhieuDichVu(id),CoSoDuLieu.getMaDichVu(comboBox.getSelectedItem().toString()),id, textSoLuong.getText());
+				} catch (SQLException throwables) {
+					throwables.printStackTrace();
+				}
 			} catch (ClassNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -175,16 +214,15 @@ public class TongQuan_ThongTinPhong_ThemDichVu extends JFrame implements ActionL
 			LichHen[i][1] = list.get(i).getGia();
 			LichHen[i][2] = list.get(i).getChiTiet();
 			LichHen[i][3] = list.get(i).getSL();
-			LichHen[i][4] = list.get(i).getNgayYeuCau();
 			LichHen[i][5] = list.get(i).getThanhTien();
 		}
 		table.setModel(new DefaultTableModel(LichHen, columnNames));
 	}
 
-	public List<DichVu2> listdv2(int ID) throws ClassNotFoundException, SQLException {
+	public List<DichVu2> listdv(int ID) throws ClassNotFoundException, SQLException {
 		List<DichVu2> listdv = new ArrayList<>();
 		Connection connection =CoSoDuLieu.getConnect();
-		String query = "SELECT DICHVU.TENDICHVU,DICHVU.GIA,CHITIETDV.SOLUONG,CHITIETDV.NGAYYEUCAU, DICHVU.ChiTiet,PHIEUDICHVU.MAPDV "
+		String query = "SELECT DICHVU.TENDICHVU,DICHVU.GIA,CHITIETDV.SOLUONG, DICHVU.ChiTiet, PHIEUDICHVU.MAPDV "
 				+ " FROM DICHVU, CHITIETDV, PHIEU_THUE_PHONG, PHIEUDICHVU "
 				+ " WHERE DICHVU.MADV = CHITIETDV.MADV"
 				+ " AND CHITIETDV.MAPHONG = "+ ID
@@ -199,11 +237,9 @@ public class TongQuan_ThongTinPhong_ThemDichVu extends JFrame implements ActionL
 				String tendv = rs.getString(1);
 				double gia = rs.getDouble(2);
 				int sl = rs.getInt(3);
-				Date NYC = rs.getDate(4);
-				String chitiet = rs.getString(5);
+				String chitiet = rs.getString(4);
 				double thanhtien = gia* sl;
-				this.maptp = rs.getInt(6);
-				listdv.add(new DichVu2(tendv, gia,chitiet,sl,NYC,thanhtien));
+				listdv.add(new DichVu2(tendv, gia,chitiet,sl,thanhtien));
 			}
 			connection.close();
 		} catch (SQLException throwables) {

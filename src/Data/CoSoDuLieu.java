@@ -59,7 +59,7 @@ public class CoSoDuLieu {
 
 	public static List<DangKiTruoc> getDanhSachLichHen() throws ClassNotFoundException, SQLException {
 		try {
-			List<DangKiTruoc> list = new ArrayList<DangKiTruoc>();
+			List<DangKiTruoc> list = new ArrayList<>();
 			Connection con = CoSoDuLieu.getConnect();
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM DangKiTruoc");
@@ -878,34 +878,55 @@ public class CoSoDuLieu {
 		}
 	}
 
-	public static void InsertChiTietDV(int mapdv, int madv, int maphong, String text) throws ClassNotFoundException {
-		// TODO Auto-generated method stub
-		String query = "INSERT INTO CHITIETDV(MAPDV, MADV, NGAYYEUCAU,SOLUONG, MAPHONG) VALUES ( ? , ? , ?, ?,? )";
-		try {
-			Connection con = CoSoDuLieu.getConnect();
-			PreparedStatement pt = con.prepareStatement(query);
-			long millis = System.currentTimeMillis();
-			Date date = new java.util.Date(millis);
-			java.sql.Date dates = new java.sql.Date(date.getTime());
+	public static void InsertChiTietDV	(int mapdv, int madv, int maphong,String text) throws ClassNotFoundException, SQLException {
+		int check = -1;
+		Connection con = CoSoDuLieu.getConnect();
+		String query = "select maphong"
+				+ " from chitietdv"
+				+ "  where chitietdv.Mapdv = "+mapdv
+				+ " and madv = "+ madv
+				+ " and maphong = " + maphong;
 
-			System.out.println(1);
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(query);
 
-			pt.setInt(1, mapdv);
-			pt.setInt(2, madv);
-			pt.setDate(3, dates);
-			int sl = Integer.parseInt(text);
-			pt.setInt(4, sl);
-			pt.setInt(5, maphong);
+		while (rs.next()) {
+			check = rs.getInt(1);
+		}
+		con.close();
+		if (check == -1) {
+			String query1 = "INSERT INTO CHITIETDV(MAPDV, MADV,SOLUONG, MAPHONG) VALUES ( ? , ? , ?, ? )";
+			try  {
+				con = CoSoDuLieu.getConnect();
+				PreparedStatement pt = con.prepareStatement(query1);
 
-			pt.execute();
+
+				pt.setInt(1,mapdv);
+				pt.setInt(2,madv);
+				int sl = Integer.parseInt(text);
+				pt.setInt(3,sl);
+				pt.setInt(4, maphong);
+
+				pt.execute();
+				con.close();
+				JOptionPane.showMessageDialog(null,"Success Insert");
+			}catch (SQLException throwables) {
+				throwables.printStackTrace();
+			}
+		}
+		else
+		{
+			query = "update Chitietdv "
+					+ "set SoLuong = Soluong +" +  Integer.parseInt(text)
+					+ "  where chitietdv.Mapdv = "+mapdv
+					+ " and madv = "+ madv
+					+ " and maphong = " + maphong;
+			con = CoSoDuLieu.getConnect();
+			st = con.createStatement();
+			st.executeQuery(query);
 			con.close();
-			JOptionPane.showMessageDialog(null, "Success Insert");
-
-		} catch (SQLException throwables) {
-			throwables.printStackTrace();
 		}
 	}
-
 	public static int getMaDichVu(String comboBox) throws ClassNotFoundException {
 		// TODO Auto-generated method stub
 		int maDV = -1;
@@ -1204,7 +1225,6 @@ public class CoSoDuLieu {
 		}
 		return listctth;
 	}
-
 	public static void getKhuyenMailist(JComboBox<String> list, int makh) throws ClassNotFoundException {
 		String query = "select TENKM from khachhang a, LOAIKH b, CHI_TIET_KHUYENMAI c, KHUYENMAI d \n" +
 				"where A.MALKH = B.MALKH \n" +
@@ -1212,7 +1232,6 @@ public class CoSoDuLieu {
 				"and C.MAKM = D.MAKM\n" +
 				"and a.makh = " + makh;
 		try {
-
 			Connection con = CoSoDuLieu.getConnect();
 			Statement st = con.createStatement();
 			ResultSet rs = st.executeQuery(query);
@@ -1710,7 +1729,6 @@ public class CoSoDuLieu {
 		}
 		return listHoaDon;
 	}
-
 	public static int getMaPhieuDichVu(int maphong) throws ClassNotFoundException {
 		// TODO Auto-generated method stub
 		int maPDV = -1;
@@ -1718,7 +1736,7 @@ public class CoSoDuLieu {
 			Connection con = CoSoDuLieu.getConnect();
 			String query = "SELECT MaPDV FROM PHIEUDICHVU, PHIEU_THUE_PHONG, CHITIET_PHIEUTHUEPHONG "
 					+ " WHERE PHIEUDICHVU.MAPTP = PHIEU_THUE_PHONG.MAPTP"
-					+ " AND CHITIET_PHIEUTHUEPHONG.MAPHONG = " + maphong
+					+ " AND CHITIET_PHIEUTHUEPHONG.MAPHONG = "+ maphong
 					+ " AND PHIEU_THUE_PHONG.MAPTP = CHITIET_PHIEUTHUEPHONG.MAPTP"
 					+ " AND PHIEU_THUE_PHONG.TINHTRANGTHANHTOAN = 0";
 
@@ -1728,11 +1746,12 @@ public class CoSoDuLieu {
 				maPDV = rs.getInt(1);
 			}
 			con.close();
-			if (maPDV == -1) {
+			if (maPDV == -1)
+			{
 				System.out.print("1");
 				con = CoSoDuLieu.getConnect();
-				long millis = System.currentTimeMillis();
-				Date date = new java.util.Date(millis);
+				long millis=System.currentTimeMillis();
+				Date date= new java.util.Date(millis);
 				java.sql.Date dates = new java.sql.Date(date.getTime());
 				String q = "SELECT MAPDV"
 						+ " FROM PHIEUDICHVU"
@@ -1742,16 +1761,16 @@ public class CoSoDuLieu {
 				rs = st.executeQuery(q);
 
 				while (rs.next()) {
-					maPDV = rs.getInt(1) + 1;
+					maPDV = rs.getInt(1) + 1 ;
 				}
 				con.close();
 
 				con = CoSoDuLieu.getConnect();
 				String query2 = "insert into PhieuDichVu (MaPTP,NgayLapPDV,GhiChu, MaPDV) values (?,?,?,?)";
 				PreparedStatement pt2 = con.prepareStatement(query2);
-				pt2.setInt(1, getMaPTP(maphong));
-				pt2.setDate(2, (java.sql.Date) dates);
-				pt2.setString(3, "");
+				pt2.setInt(1,getMaPTP(maphong));
+				pt2.setDate(2,(java.sql.Date) dates);
+				pt2.setString(3,"");
 				pt2.setInt(4, maPDV);
 				pt2.execute();
 				System.out.print(maPDV);
@@ -1875,30 +1894,55 @@ public class CoSoDuLieu {
 		}
 		return mapt;
 	}
+	public static void InsertChiTietThietHai(int maPhieuThu, int maThietHai, String maphong, String soluong) throws ClassNotFoundException, SQLException {
+		int check = -1;
+		Connection con = CoSoDuLieu.getConnect();
+		String query = "select maphong"
+				+ " from chitiet_thiethai"
+				+ "  where chitiet_thiethai.MaPT = "+maPhieuThu
+				+ " and maThietHai = "+ maThietHai
+				+ " and maphong = " + Integer.parseInt(maphong);
 
-	public static void InsertChiTietThietHai(int maPhieuThu, int maThietHai, String maphong, String soluong) throws ClassNotFoundException {
-		// TODO Auto-generated method stub
-		String query = "INSERT INTO CHITIET_thiethai(MAPT, MATHIETHAI, SOLUONG, MAPHONG) VALUES ( ? , ? , ?, ? )";
-		try {
-			Connection con = CoSoDuLieu.getConnect();
-			PreparedStatement pt = con.prepareStatement(query);
-			long millis = System.currentTimeMillis();
-			Date date = new java.util.Date(millis);
-			java.sql.Date dates = new java.sql.Date(date.getTime());
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(query);
 
-			pt.setInt(1, maPhieuThu);
-			pt.setInt(2, maThietHai);
-			int mp = Integer.parseInt(maphong);
-			pt.setInt(4, mp);
-			int sl = Integer.parseInt(soluong);
-			pt.setInt(3, sl);
+		while (rs.next()) {
+			check = rs.getInt(1);
+		}
+		con.close();
+		if (check == -1) {
+			query = "INSERT INTO CHITIET_thiethai(MAPT, MATHIETHAI, SOLUONG, MAPHONG) VALUES ( ? , ? , ?, ? )";
+			try  {
+				con = CoSoDuLieu.getConnect();
+				PreparedStatement pt = con.prepareStatement(query);
+				pt.setInt(1,maPhieuThu);
+				pt.setInt(2,maThietHai);
+				int mp = Integer.parseInt(maphong);
+				pt.setInt(4,mp);
+				int sl = Integer.parseInt(soluong);
+				pt.setInt(3,sl);
 
-			pt.execute();
-			con.close();
-			JOptionPane.showMessageDialog(null, "Success Insert");
+				pt.execute();
+				con.close();
+				JOptionPane.showMessageDialog(null,"Success Insert");
 
-		} catch (SQLException throwables) {
-			throwables.printStackTrace();
+			} catch (SQLException throwables) {
+				throwables.printStackTrace();
+			}
+		}
+		else
+		{
+
+			query = "update Chitiet_thiethai "
+					+ "set SoLuong = Soluong +" +  Integer.parseInt(soluong)
+					+ "  where chitiet_thiethai.MaPT = "+maPhieuThu
+					+ " and maThietHai = "+ maThietHai
+					+ " and maphong = " + Integer.parseInt(maphong);
+			con = CoSoDuLieu.getConnect();
+			st = con.createStatement();
+			st.executeQuery(query);
+
+
 		}
 	}
 
@@ -2055,6 +2099,268 @@ public class CoSoDuLieu {
 		}
 		return map;
 	}
+///nguoitrongphong
+	public static void XoaNguoiTrongPhong( Date ngayDen, String object)  throws ClassNotFoundException, SQLException {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String dateFormat = formatter.format(ngayDen);
+		String query = "delete from DS_nguoitrongphong"
+				+ " WHERE TINHTRANG = 0"
+				+ " and cmnd = '" + object +"'";
+		Connection con = getConnect();
+		Statement st = con.createStatement();
+		st.executeQuery(query);
+		con.close();
+		JOptionPane.showMessageDialog(null,"Success Delete");
+	}
+
+	public static void getMaPhong(JComboBox addMaPhong) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		String query = "SELECT MaPhong FROM Phong "
+				+ " where tinhtrang = 1";
+
+		Connection con = CoSoDuLieu.getConnect();
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(query);
+
+		while(rs.next()){
+			String name = rs.getString("MaPhong");
+			addMaPhong.addItem(name);
+		}
+		con.close();
+	}
+
+	public static List<DSNguoiTrongPhong> getLishNguoiTrongPhong() throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		List<DSNguoiTrongPhong> list = new ArrayList<>();
+
+		String querry = "select TENKH,MAPHONG,GIOITINH,SDT,NGAYSINH,QUOCTiCH,CMND,DIACHI,EMAIL, NGAYDEN from DS_NguoiTrongPhong"
+				+ " WHERE tinhtrang = 0";
+		Connection con = CoSoDuLieu.getConnect();
+		try {
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(querry);
+			while (rs.next()){
+				String TenKH = rs.getString(1);
+				int MaPhong = rs.getInt(2);
+				String GioiTinh = rs.getString(3);
+				String SDT = rs.getString(4);
+				Date NgaySinh = rs.getDate(5);
+				String QuocTich = rs.getString(6);
+				String CMND = rs.getString(7);
+				String diaChi = rs.getString(8);
+				String Email = rs.getString(9);
+				Date NgayDen = rs.getDate(10);
+				list.add(new DSNguoiTrongPhong(TenKH, GioiTinh, SDT,NgaySinh, QuocTich,
+						CMND, diaChi, Email, MaPhong, NgayDen));
+			}
+			con.close();
+		} catch (SQLException throwables) {
+
+			throwables.printStackTrace();
+		}
+		return  list;
+	}
+
+	public static void ThemNguoiTrongPhong(String string, String string2, String string3,
+										   String string4, String string5, String string6, String gioiTinh,
+										   JDatePickerImpl pickNGS, String maphong) throws ClassNotFoundException, SQLException {
+		java.util.Date datengaysinh = (java.util.Date) pickNGS.getModel().getValue();
+		java.sql.Date sqldatengaysinh = new java.sql.Date(datengaysinh.getTime());
+		String q = "INSERT INTO DS_NGUOITRONGPHONG(TENKH, CMND, DIACHI, EMAIL, QUOCTICH, SDT, GIOITINH, NGAYSINH, NGAYDEN, MAPHONG, tinhtrang) VALUES ( ? , ? , ?, ?,?,?,?,?,?,?,? )";
+		Connection con = CoSoDuLieu.getConnect();
+		PreparedStatement pstm = con.prepareStatement(q);
+		pstm.setString(1, string);
+		pstm.setString(2, string2);
+		pstm.setString(3, string3);
+		pstm.setString(4, string4);
+		pstm.setString(5, string5);
+		pstm.setString(6, string6);
+		pstm.setDate(8, sqldatengaysinh);
+		pstm.setString(7, gioiTinh);
+		long millis=System.currentTimeMillis();
+		Date date= new java.util.Date(millis);
+		java.sql.Date dates = new java.sql.Date(date.getTime());
+		pstm.setDate(9, dates);
+		pstm.setString(10,maphong);
+		pstm.setString(11,"0");
+		pstm.execute();
+		con.close();
+		JOptionPane.showMessageDialog(null,"Success Insert");
+	}
+
+	public static void setNguoiTrongPhong(JTextField textFieldTenKhachHang, JTextField textCMND, JTextField textdiachi,
+										  JTextField email, JTextField quoctich, JTextField textSDT, JRadioButton rdbtnNam,
+										  JRadioButton rdbtnNu, UtilDateModel modelngaynp, JComboBox comboBox, String newEntry, JDatePickerImpl pickNGS) throws ClassNotFoundException, SQLException {
+		textCMND.setText(newEntry);
+		String q = "select TENKH,MAPHONG,GIOITINH,SDT,NGAYSINH,QUOCTiCH,CMND,DIACHI,EMAIL, NGAYDEN " +
+				"from DS_NguoiTrongPhong"
+				+ " WHERE tinhtrang = 0"
+				+ " and CMND = " + newEntry;
+		Connection con = CoSoDuLieu.getConnect();
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(q);
+		while (rs.next()){
+			textFieldTenKhachHang.setText(rs.getString(1));
+			//textFieldTenKhachHang.setText(rs.getString(2));
+			//NullPointerException
+				String gt = rs.getString(3);
+				//if(gt.isEmpty()) gt = "NAM";
+				try{
+					if(gt.equals("NAM")) {
+						rdbtnNam.setSelected(true);
+						rdbtnNu.setSelected(false);
+					}
+					else if((gt.equals("NU")))
+					{
+						rdbtnNu.setSelected(true);
+						rdbtnNam.setSelected(false);
+					}
+
+				}catch (NullPointerException ignored ){
+					gt = "NAM";
+					rdbtnNam.setSelected(true);
+					rdbtnNu.setSelected(false);
+				}
+
+			textSDT.setText(rs.getString(4));
+			//pickNGS.setText(rs.getString(5));
+			java.sql.Date dt = rs.getDate(5);
+			Properties p = new Properties();
+			p.put("text.today", "Today");
+			p.put("text.month", "Month");
+			p.put("text.year", "Year");
+			modelngaynp.setValue(dt);
+			JDatePanelImpl datePanel = new JDatePanelImpl(modelngaynp, p);
+			pickNGS = new JDatePickerImpl(datePanel, new TongQuan_ThongTinPhong_DatPhong.DateLabelFormatter());
+
+
+			quoctich.setText(rs.getString(6));
+			textCMND.setText(rs.getString(7));
+			textdiachi.setText(rs.getString(8));
+			email.setText(rs.getString(9));
+
+		}
+		con.close();
+
+	}
+
+
+	public static void getMaPhong(JComboBox addMaPhong, Object object) throws ClassNotFoundException {
+		// TODO Auto-generated method stub
+		String query = "SELECT MaPhong FROM ChiTiet_PhieuThuePhong, khachHang, Phieu_thue_phong where ChiTiet_PhieuThuePhong.mapTp = Phieu_thue_phong.maptp"
+				+ " and khachHang.cmnd = '"+ object+"'"
+				+ " and khachhang.makh = Phieu_thue_phong.makh"
+				+ " and Phieu_thue_phong.tinhtrangthanhtoan = 0 " ;
+		try{
+
+			Connection con = CoSoDuLieu.getConnect();
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(query);
+
+			while(rs.next()){
+				String name = rs.getString("mapHOng");
+
+				addMaPhong.addItem(name);
+
+			}
+			con.close();
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+	}
+
+	public static void XoaChitietDichVu(int maPDV, int madv, int sl) throws ClassNotFoundException, SQLException {
+		String query = "delete from chitietdv"
+				+ " where maDV = "+ madv
+				+ " and maPdv = " + maPDV
+				+ " and maphong = " + sl;
+		Connection con = getConnect();
+		Statement st = con.createStatement();
+		st.executeQuery(query);
+		con.close();
+		JOptionPane.showMessageDialog(null,"Xóa Dịch vụ thành công!!");
+	}
+
+	public static void SuaPhieuDichVu(int maPhieuDichVu, int madv, int soluong, int maDichVu, String text,int maphong) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		XoaChitietDichVu(maPhieuDichVu, madv, maphong);
+		InsertChiTietDV	(maPhieuDichVu, maDichVu, maphong, text);
+	}
+
+	public static void SuaPhieuThu(int maPT1, int maThietHai1, int Sl1, int maPhong1, int maThietHai2, String Sl2, String maPhong2 ) throws ClassNotFoundException, SQLException
+	{
+		String query = "delete from chitiet_thiethai"
+				+ " where maThietHai = "+ maThietHai1
+				+ " and maPT = " + maPT1
+				+ " and maphong = " + maPhong1;
+		Connection con = getConnect();
+		Statement st = con.createStatement();
+		st.executeQuery(query);
+		con.close();
+		InsertChiTietThietHai(maPT1, maThietHai2, maPhong2, Sl2);
+	}
+
+	public static void XoaChitietThietHai(int maPhieuThu, int maThietHai, int valueAt) throws ClassNotFoundException, SQLException {
+		String query = "delete from chitiet_thiethai"
+				+ " where maThietHai = "+ maThietHai
+				+ " and maPT = " + maPhieuThu
+				+ " and maphong = " + valueAt;
+		Connection con = getConnect();
+		Statement st = con.createStatement();
+		st.executeQuery(query);
+		con.close();
+	}
+	public static ArrayList<Phong> listphongtrong() throws ClassNotFoundException, SQLException {
+		ArrayList<Phong> listphongtrong = new ArrayList<>();
+		Connection connection =  CoSoDuLieu.getConnect();
+		String query = "SELECT PHONG.MAPHONG,LOAIPHONG.TENLOAIPHONG,LOAIPHONG.SOLUONGTOIDA, LOAIPHONG.GIA "
+				+ " FROM PHONG  inner join LOAIPHONG  on PHONG.MALOAIPHONG = LOAIPHONG.MALOAIPHONG "
+				+ " where tinhtrang = 0"
+				+ " ORDER BY MAPHONG";
+		try {
+			Statement st = connection.createStatement();
+			ResultSet rs = st.executeQuery(query);
+
+			while (rs.next()) {
+				int maphong = rs.getInt(1);
+				String maloaiphong = rs.getString(2);
+				int soluong = rs.getInt(3);
+				double gia = rs.getDouble(4);
+				listphongtrong.add(new Phong(maphong, maloaiphong, soluong,gia));
+			}
+			connection.close();
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+		return listphongtrong;
+	}
+
+	public static void DoiPhong(int id_doi, int id) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		String query = "update Chitiet_PhieuThuePhong"
+				+ " set maphong = " + id_doi
+				+ " where maphong = " + id;
+		String query2 = " update Phong"
+				+ " set tinhtrang = 0"
+				+" where maphong = " + id;
+		String query3 =
+				" update Phong"
+						+ " set tinhtrang = 1"
+						+ " where maphong = " + id_doi ;
+		String query4 =
+				" update chitietdv"
+						+ " set maphong = " + id_doi
+						+ " where maphong = " + id ;
+
+		Connection con = CoSoDuLieu.getConnect();
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(query);
+		rs = st.executeQuery(query2);
+		rs = st.executeQuery(query3);
+		rs = st.executeQuery(query4);
+		con.close();
+	}
+
 }
 
 

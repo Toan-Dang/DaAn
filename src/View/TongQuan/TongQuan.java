@@ -40,7 +40,7 @@ public class TongQuan extends JFrame{
         this.id = id;
         //this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setBounds(100, 100, 1240, 730);
+        this.setBounds(0, 0, 1240, 730);
         this.setFocusable(true);
         this.setTitle("DS Phòng");
         this.setVisible(true);
@@ -95,7 +95,15 @@ public class TongQuan extends JFrame{
         btnTongQuan.setFont(new Font("Times New Roman", Font.BOLD, 17));
         btnTongQuan.setBounds(0, 10, 170, 44);
         panel_1.add(btnTongQuan);
-
+        btnTongQuan.addActionListener(e->{
+            this.dispose();
+            try {
+                new TongQuan(id);
+            } catch (ClassNotFoundException | SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        });
         JButton btnNhanVien = new JButton("Nhân viên");
         btnNhanVien.addActionListener(e -> {
             this.dispose();
@@ -286,6 +294,21 @@ public class TongQuan extends JFrame{
         btnDSCheckin.setBounds(1050, 255, 166, 47);
         contentPane.add(btnDSCheckin);
 
+        JButton btnNewButton = new JButton("Reset");
+
+        btnNewButton.setBackground(new Color(119, 136, 153));
+        btnNewButton.addActionListener(e->{
+            this.dispose();
+            try {
+                new TongQuan(id);
+            } catch (ClassNotFoundException | SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        });
+        btnNewButton.setBounds(1127, 106, 72, 47);
+        contentPane.add(btnNewButton);
+
         soDoPhong = new JPanel();
         soDoPhong.setBounds(190, 153, 832, 500);
         contentPane.add(soDoPhong);
@@ -301,6 +324,8 @@ public class TongQuan extends JFrame{
         keyStroke = KeyStroke.getKeyStroke("released CONTROL");
         inputMap.put(keyStroke, "releasedControl");
         contentPane.getActionMap().put("releasedControl", new DanhSachPhong("released"));
+
+
     }
 
     public static void main(String[] args) {
@@ -434,11 +459,10 @@ public class TongQuan extends JFrame{
         private JPanel getCheckBoxPanel() throws ClassNotFoundException, SQLException {
 
             ArrayList<Phong> listphong = CoSoDuLieu.listphong();
-            int cnt = 0;
-            int row = 1;
+            int cnt = listphong.size();
+            int row = (cnt/10)+1;
+
             for (Phong p : listphong) {
-                ++cnt;
-                if(cnt %10 == 0) ++row;
                 if (controls.getComponentCount() < 1) {
                     controls.setLayout(new BorderLayout());
                     addLabel(String.valueOf(p.getMaPhong()), p.getTinhTrang(), p.getMaLoaiPhong());
@@ -448,7 +472,7 @@ public class TongQuan extends JFrame{
                     addLabel(String.valueOf(p.getMaPhong()), p.getTinhTrang(), p.getMaLoaiPhong());
                     makeChange();
                 } else {
-                    controls.setLayout(new GridLayout(row, 0, 5, 5));
+                    controls.setLayout(new GridLayout(4, 0, 5, 5));
                     addLabel(String.valueOf(p.getMaPhong()), p.getTinhTrang(), p.getMaLoaiPhong());
                     makeChange();
                 }

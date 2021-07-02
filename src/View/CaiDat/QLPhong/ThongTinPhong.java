@@ -7,6 +7,7 @@ import javax.swing.table.*;
 import Data.CoSoDuLieu;
 import Model.DangKiTruoc;
 import View.TongQuan.TongQuan_ThongTinPhong_DatPhong;
+import View.TongQuan.TongQuan_ThongTinPhong_DoiPhong;
 import View.TongQuan.TongQuan_ThongTinPhong_ThemDichVu;
 
 import java.awt.*;
@@ -20,18 +21,18 @@ import java.util.List;
 
 public class ThongTinPhong extends JFrame {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     *
+     */
+    private static final long serialVersionUID = 1L;
     TableRowSorter<TableModel> rowSorter;
     JPanel contentPane;
     private JTable tableModel;
     private JButton btnDatPhong;
-    
+
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-              new ThongTinPhong(1);
+                new ThongTinPhong(1);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -40,6 +41,7 @@ public class ThongTinPhong extends JFrame {
 
     public ThongTinPhong(int id) throws ClassNotFoundException {
         this.setVisible(true);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBounds(100, 100, 814, 523);
         this.setLocationRelativeTo(null);
         this.setTitle("Thông tin phòng số " + id);
@@ -114,9 +116,9 @@ public class ThongTinPhong extends JFrame {
                 if (tinh_trang != null) {
                     if (tinh_trang.equals("0")) tinh_trang = "trống";
                     if (tinh_trang.equals("1")) {
-                    	check = 1;
-                    	tinh_trang = "đã có người";
-                    	}
+                        check = 1;
+                        tinh_trang = "đã có người";
+                    }
                     if (tinh_trang.equals("2")) tinh_trang = "đã được đặt";
                 } else tinh_trang = "trống";
 
@@ -145,52 +147,70 @@ public class ThongTinPhong extends JFrame {
         JButton btnQuayLai = new JButton("Quay l\u1EA1i");
         btnQuayLai.setBackground(new Color(255, 69, 0));
         btnQuayLai.setFont(new Font("Tahoma", Font.BOLD, 15));
-        btnQuayLai.setBounds(640, 243, 129, 51);
+        btnQuayLai.setBounds(640, 330, 129, 51);
         contentPane.add(btnQuayLai);
-        
+
         JPanel panel_1 = new JPanel();
         panel_1.setLayout(null);
         panel_1.setBackground(new Color(178, 34, 34));
         panel_1.setBounds(10, 10, 750, 53);
         contentPane.add(panel_1);
-        
+
         JLabel lblPhng = new JLabel("Phòng:");
         lblPhng.setBounds(146, 0, 223, 51);
         panel_1.add(lblPhng);
         lblPhng.setHorizontalAlignment(SwingConstants.CENTER);
         lblPhng.setForeground(new Color(255, 255, 255));
         lblPhng.setFont(new Font("Times New Roman", Font.BOLD, 30));
-        
-        
-                JLabel lblMaPhong = new JLabel(String.valueOf(id));
-                lblMaPhong.setBounds(348, 0, 223, 51);
-                panel_1.add(lblMaPhong);
-                lblMaPhong.setHorizontalAlignment(SwingConstants.CENTER);
-                lblMaPhong.setForeground(new Color(255, 255, 255));
-                lblMaPhong.setFont(new Font("Times New Roman", Font.BOLD, 30));
-                
-                JButton btnThemDV = new JButton("Thêm DV");
-                btnThemDV.setFont(new Font("Tahoma", Font.BOLD, 15));
-                btnThemDV.setBackground(new Color(60, 179, 113));
-                btnThemDV.setBounds(640, 159, 129, 51);
-                contentPane.add(btnThemDV);
-                
 
-        btnQuayLai.addActionListener(e -> this.dispose());
+
+        JLabel lblMaPhong = new JLabel(String.valueOf(id));
+        lblMaPhong.setBounds(348, 0, 223, 51);
+        panel_1.add(lblMaPhong);
+        lblMaPhong.setHorizontalAlignment(SwingConstants.CENTER);
+        lblMaPhong.setForeground(new Color(255, 255, 255));
+        lblMaPhong.setFont(new Font("Times New Roman", Font.BOLD, 30));
+
+        JButton btnThemDV = new JButton("Thêm DV");
+        btnThemDV.setFont(new Font("Tahoma", Font.BOLD, 15));
+        btnThemDV.setBackground(new Color(60, 179, 113));
+        btnThemDV.setBounds(640, 159, 129, 51);
+        contentPane.add(btnThemDV);
+
+        JButton btnChuynPhng = new JButton("Đổi phòng");
+        btnChuynPhng.setFont(new Font("Tahoma", Font.BOLD, 15));
+        btnChuynPhng.setBackground(Color.BLUE);
+        btnChuynPhng.setBounds(640, 242, 129, 51);
+        contentPane.add(btnChuynPhng);
+
+
+
+        btnQuayLai.addActionListener(e -> {
+            this.dispose();
+        });
         if (check == 0 )
         {
-        	btnDatPhong.addActionListener(e -> new TongQuan_ThongTinPhong_DatPhong(id));
+            btnDatPhong.addActionListener(e -> new TongQuan_ThongTinPhong_DatPhong(id));
         }
         else
-        	btnThemDV.addActionListener(e-> {
-				try {
-					new TongQuan_ThongTinPhong_ThemDichVu(id);
-				} catch (ClassNotFoundException | SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			});
-        	
+        {btnThemDV.addActionListener(e-> {
+            try {
+                new TongQuan_ThongTinPhong_ThemDichVu(id);
+            } catch (ClassNotFoundException | SQLException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        });
+            btnChuynPhng.addActionListener(e->{
+                this.dispose();
+                try {
+                    new TongQuan_ThongTinPhong_DoiPhong(id);
+                } catch (ClassNotFoundException | SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            });
+        }
     }
 
     public class TBDsDatTruoc {
@@ -203,16 +223,16 @@ public class ThongTinPhong extends JFrame {
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                     ex.printStackTrace();
                 }
-               ArrayList<DangKiTruoc> list = new ArrayList<>();
-			try {
-				list = CoSoDuLieu.listdattruoc(id);
-			} catch (ClassNotFoundException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-              MyTableModel model = new MyTableModel();
-                    int rowint ;
-                    Date[] rowdate = new Date[3];
+                ArrayList<DangKiTruoc> list = new ArrayList<>();
+                try {
+                    list = CoSoDuLieu.listdattruoc(id);
+                } catch (ClassNotFoundException | SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                MyTableModel model = new MyTableModel();
+                int rowint ;
+                Date[] rowdate = new Date[3];
                 for (DangKiTruoc ds : list) {
                     rowint = ds.getMaKH();
                     rowdate[0] = ds.getNgayDK();

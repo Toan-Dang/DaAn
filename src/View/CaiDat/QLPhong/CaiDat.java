@@ -223,11 +223,6 @@ public class CaiDat extends JFrame implements ActionListener {
         JTextField searchfield = new JTextField();
         searchfield.setBounds(307, 202, 291, 27);
         contentPane.add(searchfield);
-        
-        JLabel lblNewLabel_5 = new JLabel("Tìm kiếm:");
-        lblNewLabel_5.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-        lblNewLabel_5.setBounds(190, 205, 62, 19);
-        contentPane.add(lblNewLabel_5);
         searchfield.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -254,6 +249,11 @@ public class CaiDat extends JFrame implements ActionListener {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         });
+        JLabel lblNewLabel_5 = new JLabel("Tìm kiếm:");
+        lblNewLabel_5.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        lblNewLabel_5.setBounds(190, 205, 62, 19);
+        contentPane.add(lblNewLabel_5);
+
 
         new MultiButtonTablePhong();
         btnQuanLyDichVu.addActionListener(e -> {
